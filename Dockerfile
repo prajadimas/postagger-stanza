@@ -1,12 +1,14 @@
-FROM python:3.7-alpine
+FROM python:3.8-alpine
 
 WORKDIR /myapp
 
 COPY Pipfile* ./
 
-RUN pip install --no-cache-dir pipenv && \
+RUN python3.8 -m pip install pip --upgrade && \
+    python3.8 -m pip install --no-cache-dir pipenv && \
+    pipenv install --python 3.8 && \
     pipenv install --system --deploy --clear
 
 COPY . .
 EXPOSE 5000
-CMD ["flask", "run"]
+CMD ["pipenv", "run", "flask", "run"]
