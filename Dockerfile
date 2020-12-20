@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir pipenv && \
     pipenv install --system --deploy --clear
 
 COPY . .
-CMD ["flask", "run"]
+CMD ["python3.8", "-m", "flask", "run"]
