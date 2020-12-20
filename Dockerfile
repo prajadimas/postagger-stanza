@@ -1,12 +1,18 @@
-FROM python:3.8-alpine
+FROM python:3.8-slim
 
-WORKDIR /myapp
+WORKDIR /app
 
-COPY Pipfile* ./
+# both files are explicitly required!
+COPY Pipfile Pipfile.lock ./
 
-RUN pip install --no-cache-dir pipenv && \
-    pipenv install --system --deploy --clear
+RUN pip install pipenv && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends gcc python3-dev libssl-dev && \
+  pipenv install --deploy --system && \
+  apt-get remove -y gcc python3-dev libssl-dev && \
+  apt-get autoremove -y && \
+  pip uninstall pipenv -y
 
-COPY . .
+COPY . ./
 EXPOSE 5000
 CMD ["flask", "run"]
